@@ -21,7 +21,7 @@ class LoginViewModel : ViewModel() {
                     val loginResponse = response.body()
                     _loginResult.value = AuthResult.Success(loginResponse ?: LoginResponse("blank token"))
                 } else {
-                    _loginResult.value = AuthResult.Error("Login failed")
+                    _loginResult.value = AuthResult.Error("Login failed: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
                 _loginResult.value = AuthResult.Error("An error occurred: ${e.message}")
@@ -30,6 +30,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 }
+
 
 
 
