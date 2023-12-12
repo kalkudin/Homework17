@@ -10,14 +10,19 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 object ApiClient {
     private const val BASE_URL = "https://reqres.in/api/"
 
-    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    private val moshi: Moshi by lazy {
+        Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
+    }
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .build()
+    private val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
 
-    val loginApiService: LoginApiService = retrofit.create(LoginApiService::class.java)
-
-    val registerApiService: RegisterApiService = retrofit.create(RegisterApiService::class.java)
+    val loginApiService: LoginApiService by lazy { retrofit.create(LoginApiService::class.java) }
+    val registerApiService: RegisterApiService by lazy { retrofit.create(RegisterApiService::class.java) }
 }

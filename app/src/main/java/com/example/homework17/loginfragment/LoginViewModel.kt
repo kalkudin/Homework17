@@ -1,38 +1,37 @@
 package com.example.homework17.loginfragment
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.homework17.common.ApiResponse
-import com.example.homework17.network.ApiClient.loginApiService
-import kotlinx.coroutines.Dispatchers
+import com.example.homework17.common.AuthResult
+import com.example.homework17.network.ApiClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
-
-    private val _loginResult = MutableStateFlow<ApiResponse<TokenResponse>>(ApiResponse.Error(errorMessage = "Initial state"))
-    val loginResult: StateFlow<ApiResponse<TokenResponse>> get() = _loginResult
+    private val _loginResult = MutableStateFlow<AuthResult<LoginResponse>?>(null)
+    val loginResult: StateFlow<AuthResult<LoginResponse>?> get() = _loginResult
 
     fun login(email: String, password: String) {
-        if (isValidEmail(email) && password.isNotEmpty()) {
-            viewModelScope.launch {
-                try {
-                    val response = loginApiService.login(LoginData(email, password))
-                    _loginResult.value = when (response) {
-                        is ApiResponse.Success -> ApiResponse.Success(response.data)
-                        is ApiResponse.Error -> ApiResponse.Error(errorMessage = response.errorMessage)
-                    }
-                } catch (e: Exception) {
-                    _loginResult.value = ApiResponse.Error(errorMessage = e.message ?: "An unexpected error occurred")
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.loginApiService.login(LoginRequest(email, password))
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    _loginResult.value = AuthResult.Success(loginResponse ?: LoginResponse("blank token"))
+                } else {
+                    _loginResult.value = AuthResult.Error("Login failed")
                 }
+            } catch (e: Exception) {
+                _loginResult.value = AuthResult.Error("An error occurred: ${e.message}")
+                Log.e("LoginViewModel", "An error occurred during login", e)
             }
         }
     }
-
-    private fun isValidEmail(email: String): Boolean {
-        return email == "eve.holt@reqres.in"
-    }
 }
+
+
+
 
 

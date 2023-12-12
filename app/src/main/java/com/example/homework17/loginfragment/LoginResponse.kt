@@ -1,3 +1,3 @@
 package com.example.homework17.loginfragment
 
-data class TokenResponse(val token: String)
+data class LoginResponse(val token: String)

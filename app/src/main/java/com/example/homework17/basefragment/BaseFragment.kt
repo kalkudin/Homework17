@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.snackbar.Snackbar
 
 typealias inflater<VB> = (LayoutInflater, ViewGroup?, Boolean) -> VB
 
@@ -38,4 +39,5 @@ abstract class BaseFragment<VB : ViewBinding>(private val inflate: inflater<VB>)
     abstract fun setUpListeners()
 
     abstract fun setUpViewActionListeners()
+
 }
