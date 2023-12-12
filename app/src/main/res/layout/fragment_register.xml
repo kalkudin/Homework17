@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".registerfragment.RegisterFragment"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="@string/register"
+        android:textSize="48sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="30dp"
+        android:hint="@string/email"
+        android:paddingStart="20dp"
+        android:textSize="20sp"
+        tools:ignore="RtlSymmetry" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="30dp"
+        android:hint="@string/password"
+        android:paddingStart="20dp"
+        android:textSize="20sp"
+        tools:ignore="RtlSymmetry" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_repeat_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="30dp"
+        android:hint="repeat password"
+        android:paddingStart="20dp"
+        android:textSize="20sp"
+        tools:ignore="RtlSymmetry" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="30dp"
+        android:hint="@string/register"
+        android:paddingStart="20dp"
+        android:textSize="16sp"
+        tools:ignore="RtlSymmetry" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

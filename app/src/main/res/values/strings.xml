@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Homework17</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="log_in">Log in</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="register_here">Don\'t have an account? Register Here</string>
+    <string name="register">Register</string>
+    <string name="email_example_email">Email: Example Email</string>
+    <string name="log_out">log out</string>
+</resources>
