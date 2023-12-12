@@ -16,6 +16,10 @@ import kotlinx.coroutines.launch
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Patterns
+import androidx.core.widget.addTextChangedListener
+
+
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
@@ -33,12 +37,25 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     override fun setUpListeners() {
+        // Initially, disable the login button
+        binding.btnLogin.isEnabled = false
+        binding.etEmail.addTextChangedListener { email ->
+            binding.btnLogin.isEnabled = isValidEmail(email.toString()) && binding.etPassword.text!!.isNotEmpty()
+        }
+
+        binding.etPassword.addTextChangedListener { password ->
+            if (password != null) {
+                binding.btnLogin.isEnabled = password.isNotEmpty() && isValidEmail(binding.etEmail.text.toString())
+            }
+        }
+
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
 
             loginViewModel.login(email, password)
         }
+
         binding.btnRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
@@ -86,5 +103,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             putString("user_email", binding.etEmail.text.toString())
         }
         findNavController().navigate(R.id.action_loginFragment_to_homeFragment, bundle)
+    }
+
+    // Email validation function using Patterns.EMAIL_ADDRESS
+    private fun isValidEmail(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }
