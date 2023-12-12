@@ -30,7 +30,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun setUpViewActionListeners() {
         if (!isUserLoggedIn()) {
             navigateToLoginFragment()
+        } else {
+            displayUserEmail()
         }
+    }
+
+    private fun displayUserEmail() {
+        val userEmail = arguments?.getString("user_email")
+        binding.tvEmail.text = userEmail
     }
 
     private fun isUserLoggedIn(): Boolean {

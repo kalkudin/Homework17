@@ -17,7 +17,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 
-
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private val loginViewModel: LoginViewModel by viewModels()
@@ -58,10 +57,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            if (binding.btnRememberMe.isChecked) {
-                                saveCredentials(binding.etEmail.text.toString(), binding.etPassword.text.toString())
-                            }
-
                             navigateToHomeFragment()
                         }
 
@@ -86,15 +81,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         }
     }
 
-    private fun saveCredentials(email: String, password: String) {
-        val editor = sharedPreferences.edit()
-        editor.putString("email", email)
-        editor.putString("password", password)
-        editor.apply()
-    }
-
     private fun navigateToHomeFragment() {
-        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+        val bundle = Bundle().apply {
+            putString("user_email", binding.etEmail.text.toString())
+        }
+        findNavController().navigate(R.id.action_loginFragment_to_homeFragment, bundle)
     }
-
 }
