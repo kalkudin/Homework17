@@ -63,7 +63,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
             }
         }
     }
-
+    //i think its better to move the password check to the viewmodel.
     private fun arePasswordsSame(password1: String, password2: String): Boolean {
         return password1 == password2
     }

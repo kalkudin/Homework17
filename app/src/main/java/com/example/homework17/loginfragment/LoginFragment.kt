@@ -1,6 +1,8 @@
 package com.example.homework17.loginfragment
 
+import android.util.Patterns
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -13,47 +15,38 @@ import com.example.homework17.common.AuthData
 import com.example.homework17.common.AuthResult
 import com.example.homework17.databinding.FragmentLoginBinding
 import kotlinx.coroutines.launch
-import android.content.Context
-import android.content.SharedPreferences
-import android.os.Bundle
-import android.util.Patterns
-import androidx.core.widget.addTextChangedListener
-
-
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private val loginViewModel: LoginViewModel by viewModels()
 
-    private lateinit var sharedPreferences: SharedPreferences
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
-    }
-
     override fun setUp() {
         // Your setup code
     }
-
+    //the session is being saved along with the relevant data, but for some reason it is not loading. the email and token are being saved just fine though
+    //work on a fix along the weekend
     override fun setUpListeners() {
         // Initially, disable the login button
+        // I dont like the login button enabled funtionality.
         binding.btnLogin.isEnabled = false
         binding.etEmail.addTextChangedListener { email ->
-            binding.btnLogin.isEnabled = isValidEmail(email.toString()) && binding.etPassword.text!!.isNotEmpty()
+            binding.btnLogin.isEnabled =
+                isValidEmail(email.toString()) && binding.etPassword.text!!.isNotEmpty()
         }
 
         binding.etPassword.addTextChangedListener { password ->
             if (password != null) {
-                binding.btnLogin.isEnabled = password.isNotEmpty() && isValidEmail(binding.etEmail.text.toString())
+                binding.btnLogin.isEnabled =
+                    password.isNotEmpty() && isValidEmail(binding.etEmail.text.toString())
             }
         }
-
+        //when cleaning this up use scope functions.
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
+            val rememberMe = binding.btnRememberMe.isChecked
 
-            loginViewModel.login(email, password)
+            loginViewModel.login(email, password, rememberMe)
         }
 
         binding.btnRegister.setOnClickListener {
@@ -99,10 +92,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun navigateToHomeFragment() {
-        val bundle = Bundle().apply {
-            putString("user_email", binding.etEmail.text.toString())
-        }
-        findNavController().navigate(R.id.action_loginFragment_to_homeFragment, bundle)
+        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
     }
 
     // Email validation function using Patterns.EMAIL_ADDRESS

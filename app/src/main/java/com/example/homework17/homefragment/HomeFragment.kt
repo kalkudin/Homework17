@@ -1,24 +1,22 @@
 package com.example.homework17.homefragment
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.os.Bundle
+import android.util.Log
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.homework17.R
 import com.example.homework17.basefragment.BaseFragment
+import com.example.homework17.common.PreferencesRepository
 import com.example.homework17.databinding.FragmentHomeBinding
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
-    private lateinit var sharedPreferences: SharedPreferences
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
-    }
+    private val preferencesRepository = PreferencesRepository
 
     override fun setUp() {
         // Your setup code
+        displayUserEmail()
     }
 
     override fun setUpListeners() {
@@ -28,34 +26,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun setUpViewActionListeners() {
-        if (!isUserLoggedIn()) {
-            navigateToLoginFragment()
-        } else {
-            displayUserEmail()
-        }
+        // ... (rest of your setup)
     }
 
     private fun displayUserEmail() {
-        val userEmail = arguments?.getString("user_email")
-        binding.tvEmail.text = userEmail
-    }
-
-    private fun isUserLoggedIn(): Boolean {
-        val email = sharedPreferences.getString("email", null)
-        val password = sharedPreferences.getString("password", null)
-
-        return !email.isNullOrEmpty() && !password.isNullOrEmpty()
+        viewLifecycleOwner.lifecycleScope.launch() {
+            val userEmail = preferencesRepository.readToken()
+            Log.d("LoginFragment", "User Email: ${userEmail.first()}")
+            binding.tvEmail.text = userEmail.first()
+        }
     }
 
     private fun logoutUser() {
-        // Clear saved credentials
-        sharedPreferences.edit().clear().apply()
-
-        // Navigate back to LoginFragment
-        findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
-    }
-
-    private fun navigateToLoginFragment() {
-        findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
+        viewLifecycleOwner.lifecycleScope.launch {
+            preferencesRepository.clearSession()
+            findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
+        }
     }
 }
