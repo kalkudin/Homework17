@@ -14,8 +14,8 @@ class LoginViewModel : ViewModel() {
 
     private val _loginResult = MutableStateFlow<AuthResult<LoginResponse>?>(null)
     val loginResult: StateFlow<AuthResult<LoginResponse>?> get() = _loginResult
-
-    fun login(email: String, password: String, rememberMe: Boolean) {
+    //here make a seperate function to save the useremail and token, then call it it the fragment. that should fix it
+    fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
                 val response = ApiClient.loginApiService.login(LoginRequest(email, password))
@@ -23,11 +23,6 @@ class LoginViewModel : ViewModel() {
                     val loginResponse = response.body()
                     _loginResult.value =
                         AuthResult.Success(loginResponse ?: LoginResponse("blank token"))
-
-                    // Save email and token to preferences if "Remember Me" is checked
-                    if (rememberMe) {
-                        PreferencesRepository.writeEmailAndToken(email, loginResponse?.token ?: "")
-                    }
                 } else {
                     _loginResult.value =
                         AuthResult.Error("Login failed: ${response.errorBody()?.string()}")
@@ -37,6 +32,10 @@ class LoginViewModel : ViewModel() {
                 Log.e("LoginViewModel", "An error occurred during login", e)
             }
         }
+    }
+
+    suspend fun saveUserInfo(email : String, token : String = ""){
+        PreferencesRepository.writeEmailAndToken(email, token)
     }
 }
 

@@ -17,6 +17,7 @@ object PreferencesRepository{
     val EMAIL = stringPreferencesKey("email")
     val TOKEN = stringPreferencesKey("key")
 
+
     suspend fun writeEmailAndToken(email: String, token: String) {
         App.application.applicationContext.dataStore.edit { settings ->
             settings[EMAIL] = email
@@ -38,6 +39,7 @@ object PreferencesRepository{
             }
     }
 
+    //this works just fine in deleting the uer data, but i cant seem to save the state.
     suspend fun clearSession() {
         App.application.applicationContext.dataStore.edit { settings ->
             settings.remove(EMAIL)

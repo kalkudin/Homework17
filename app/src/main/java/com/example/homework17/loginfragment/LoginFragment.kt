@@ -23,11 +23,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     override fun setUp() {
         // Your setup code
     }
-    //the session is being saved along with the relevant data, but for some reason it is not loading. the email and token are being saved just fine though
-    //work on a fix along the weekend
+
+    //this currently doesnt work because the viewmodel only saves the data if there the checkbox is checked otherwise we wont get anything
+    //on the display because nothng is getting saved. its an easy fix but i am sleepy now.
     override fun setUpListeners() {
         // Initially, disable the login button
-        // I dont like the login button enabled funtionality.
+        //the data is being saved, but i cant seem to save the session.
         binding.btnLogin.isEnabled = false
         binding.etEmail.addTextChangedListener { email ->
             binding.btnLogin.isEnabled =
@@ -40,20 +41,21 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     password.isNotEmpty() && isValidEmail(binding.etEmail.text.toString())
             }
         }
-        //when cleaning this up use scope functions.
+
         binding.btnLogin.setOnClickListener {
+            //use scope fucntions here
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
-            val rememberMe = binding.btnRememberMe.isChecked
 
-            loginViewModel.login(email, password, rememberMe)
+            loginViewModel.login(email, password)
         }
 
         binding.btnRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }
-
+    //i think the reaspon why nothing is being saved is because i dont have my object declared as a singleton, so there is a new state every time
+    //the app loads up.
     override fun setUpViewActionListeners() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -65,9 +67,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                                 requireContext(),
                                 "Login successful!",
                                 Toast.LENGTH_SHORT
-                            ).show()
-
-                            navigateToHomeFragment()
+                            ).show()//this is being done in the viewmodel, just access the object and write in it directly
+                            if(binding.btnRememberMe.isChecked){
+                                loginViewModel.saveUserInfo(binding.etEmail.text.toString(), token)
+                                navigateToHomeFragment()
+                            }
+//                            navigateToHomeFragment()
                         }
 
                         is AuthResult.Error -> {

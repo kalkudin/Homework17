@@ -42,7 +42,6 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
                         is AuthResult.Success -> {
                             // Use Fragment Result API to send AuthData back to LoginFragment
                             setFragmentResult("REGISTER_SUCCESS", bundleOf("authData" to AuthData(binding.etEmail.text.toString(), binding.etPassword.text.toString())))
-
                             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
                             Toast.makeText(
                                 requireContext(),

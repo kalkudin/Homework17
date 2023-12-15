@@ -31,7 +31,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun displayUserEmail() {
         viewLifecycleOwner.lifecycleScope.launch() {
-            val userEmail = preferencesRepository.readToken()
+            val userEmail = preferencesRepository.readEmail()
             Log.d("LoginFragment", "User Email: ${userEmail.first()}")
             binding.tvEmail.text = userEmail.first()
         }
